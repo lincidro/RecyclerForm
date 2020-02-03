@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RecyclerForm</string>
+    <string name="btn_main">Start</string>
+    <string name="btn_accept">Start</string>
+    <string name="text_title">Title</string>
+    <string name="text_pages">Pages</string>
 </resources>

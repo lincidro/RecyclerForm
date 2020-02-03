@@ -32,20 +32,22 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     public void onBindViewHolder(@NonNull RecyclerBookViewHolder holder, int position) {
         Book book = bookList.get(position);
         holder.tvTitle.setText(book.getTitle());
+        holder.tvPages.setText(String.valueOf(book.getPages()));
     }
 
     @Override
     public int getItemCount() {
-        return bookList.size();
+        return  bookList == null ? 0 : bookList.size();
     }
 
     public class RecyclerBookViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvTitle;
+        public TextView tvTitle, tvPages;
 
         public RecyclerBookViewHolder(@NonNull View view) {
             super(view);
             tvTitle = view.findViewById(R.id.tv_book_title);
+            tvPages = view.findViewById(R.id.tv_book_pages);
         }
     }
 }

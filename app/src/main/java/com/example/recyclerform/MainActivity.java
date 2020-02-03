@@ -1,15 +1,19 @@
 package com.example.recyclerform;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.recyclerform.book.adapter.RecyclerBookAdapter;
 import com.example.recyclerform.book.model.Book;
+import com.example.recyclerform.util.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initVars(){
-        populateBookList();
+        initBookList();
         setupRecycler();
     }
 
@@ -50,21 +54,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rvBooks.setAdapter(recyclerBookAdapter);
     }
 
-    private void populateBookList() {
+    private void initBookList() {
         bookList = new ArrayList<>();
-        bookList.add(new Book("Harry Potter 1", 100));
-        bookList.add(new Book("Harry Potter 2", 200));
-        bookList.add(new Book("Harry Potter 3", 300));
-        bookList.add(new Book("Harry Potter 4", 400));
-        bookList.add(new Book("Harry Potter 5", 500));
+//      bookList.add(new Book("Harry Potter 1", 100));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_book:
-                bookList.add(new Book("Harry Potter 6",600));
-                updateAdapterList();
+                startFormActivity();
                 break;
             default:
                 Toast.makeText(this, "default", Toast.LENGTH_SHORT).show();
@@ -73,5 +72,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void updateAdapterList(){
         recyclerBookAdapter.notifyDataSetChanged();
+    }
+
+    private void startFormActivity() {
+        Intent intent = new Intent(this, FormActivity.class);
+        startActivityForResult(intent, Constants.START_FORM_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constants.START_FORM_ACTIVITY) {
+            if(resultCode == Activity.RESULT_OK) {
+                Book book = data.getParcelableExtra(Constants.BOOK_OBJECT);
+                if(book != null) {
+                    Book bookToAdd = new Book(book.getTitle(), book.getPages());
+                    bookList.add(bookToAdd);
+                    updateAdapterList();
+                }
+            }
+            if(resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
